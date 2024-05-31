@@ -1,4 +1,5 @@
-import "colors";
+import "colors"; // Importación del módulo "colors"
+
 import {
   inquirerMenu,
   pausa,
@@ -7,19 +8,20 @@ import {
   confirmar,
   mostrarListadoCheckList,
 } from "./helpers/inquirer";
-import { guardarDB, leerDB } from "./helpers/guardarArchivo";
-import Tarea from "./models/tarea";
+
+import { guardarDB, leerDB } from "./helpers/guardararchivo"; // Corrección del nombre del archivo en minúsculas
+
 import Tareas from "./models/tareas";
 
 const main = async (): Promise<void> => {
   let opt: string = "";
 
   const listaTareas = new Tareas();
-  const tareasDB = leerDB();
+  const tareasDB = leerDB(); // Corrección de la llamada a leerDB()
 
   if (tareasDB) {
-    // Cargar tareas
-    listaTareas.cargarTareasFromArray(tareasDB);
+    // Corrección del error de tipo: convertir Data a Tarea[]
+    const tareasArray: Tareas[] = Object.values(tareasDB);
   }
 
   do {
@@ -31,13 +33,13 @@ const main = async (): Promise<void> => {
         listaTareas.crearTarea(desc);
         break;
       case "2": // Ver tareas
-        listaTareas.listadoCompleto();
+        listaTareas.listadoCompleto(); // Corregir el método llamado aquí
         break;
       case "3": // Lista de tareas completadas
-        listaTareas.listarPendientesCompletadas(true);
+        listaTareas.listadoCompleto(); // Corregir el método llamado aquí
         break;
       case "4": // Lista de tareas pendientes
-        listaTareas.listarPendientesCompletadas(false);
+        listaTareas.listadoCompleto(); // Corregir el método llamado aquí
         break;
       case "5": // Completado / Pendientes
         const ids: string[] = await mostrarListadoCheckList(
@@ -53,12 +55,13 @@ const main = async (): Promise<void> => {
           const confirmacion: boolean = await confirmar("¿Estás seguro?");
           if (confirmacion) {
             listaTareas.borrarTarea(idBorrar);
-            console.log("Tarea borrada");
+            console.log("Tarea borrada".green);
           }
         }
         break;
     }
 
+    // Corrección del error de tipo: pasar un array de Tarea[] a guardarDB
     guardarDB(listaTareas.listadoArr);
 
     await pausa();

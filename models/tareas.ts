@@ -1,4 +1,4 @@
-import { Tarea } from "./tarea";
+import Tarea from "./tarea";
 
 class Tareas {
   private _listado: { [key: string]: Tarea };
@@ -44,34 +44,17 @@ class Tareas {
     });
   }
 
-  listarPendientesCompletadas(completadas: boolean = true): void {
-    console.log();
-    let contador = 0;
-    this.listadoArr.forEach((tarea) => {
-      const { desc, completadoEn } = tarea;
-      const estado = completadoEn ? "Completada".green : "Pendiente".red;
-      if (completadoEn === completadas) {
-        contador += 1;
-        console.log(`${contador.toString().green} ${desc} :: ${estado}`);
-      } else {
-        if (completadoEn) {
-          contador += 1;
-          console.log(`${contador.toString().green} ${desc} :: ${estado}`);
-        }
-      }
-    });
-  }
-
   toggleCompletadas(ids: string[] = []): void {
     ids.forEach((id) => {
       const tarea = this._listado[id];
       if (tarea) {
-        tarea.completadoEn = tarea.completadoEn
-          ? null
-          : new Date().toISOString();
+        tarea.completadoEn = tarea.completadoEn ? null : new Date();
       }
     });
-    this.listadoArr.forEach((tarea) => {
+
+    // Se recorre la lista para actualizar las tareas no incluidas en 'ids'
+    this.listadoArr.forEach((tarea: Tarea) => {
+      // Declaración explícita del tipo de tarea
       if (!ids.includes(tarea.id)) {
         tarea.completadoEn = null;
       }

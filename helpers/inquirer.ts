@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import { Tarea } from "../models/tareas";
+import Tarea from "../models/tarea"; // Corrección en la importación del tipo Tarea
 import "colors";
 
 interface Pregunta {
@@ -7,6 +7,7 @@ interface Pregunta {
   name: string;
   message: string;
   validate?: (value: string) => boolean | string;
+  choices?: { value: string; name: string; checked?: boolean }[]; // Añadido el tipo de choices
 }
 
 const preguntas: Pregunta[] = [
@@ -70,9 +71,9 @@ const leerInput = async (message: string): Promise<string> => {
 const listadoTareasBorrar = async (tareas: Tarea[]): Promise<string> => {
   const choices = tareas.map((tarea, i) => {
     const idx = `${i + 1}.`.green;
-    return `${idx} ${tarea.desc}`;
+    return { value: tarea.id, name: `${idx} ${tarea.desc}` }; // Corrección en la definición de choices
   });
-  choices.unshift(`${"0.".green} Cancelar`);
+  choices.unshift({ value: "0", name: `${"0.".green} Cancelar` }); // Corrección en la definición de choices
   const preguntas: Pregunta[] = [
     {
       type: "list",
